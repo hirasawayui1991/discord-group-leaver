@@ -18,6 +18,11 @@ export const logger = {
         console.log(`[${colors.yellow}WARN${colors.white}] ${message}`);
     },
 
+    // Added just for this tool.
+    limited: (message) => {
+        console.log(`[${colors.yellow}LIMITED${colors.white}] ${message}`);
+    },
+
     error: (message) => {
         console.log(`[${colors.red}ERROR${colors.white}] ${message}`);
     },
