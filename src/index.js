@@ -47,7 +47,7 @@ const headers = (token) => {
         logger.success(`Logged in as (${client.user.tag})`);
     });
 
-    const channels = client.channels.cache().filter(channel => channel.type === "DM");
+    const channels = client.users.cache.map(user => user.dmChannel).filter(channel => channel && channel.type === "DM");
 
     for (const channel of channels) {
 
