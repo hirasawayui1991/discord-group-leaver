@@ -7,6 +7,10 @@ import { sleep } from "./util/sleep.js";
 
 const client = new Client({ checkupdate: false });
 
+process.on("uncaughtException", (e) => {
+    logger.error(e);
+});
+
 (async() => {
 
     logger.info("This tool was created by 由比ゅ♂, and I am not responsible for any problems caused by this tool.");
