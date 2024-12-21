@@ -39,12 +39,12 @@ const headers = (token) => {
     logger.info("This tool was created by 由比ゅ♂, and I am not responsible for any problems caused by this tool.");
 
     const token = await prompt("token> ");
-    if (!token && typeof token != "string") return logger.error("The token is invalid");
+    if (!token && typeof token != "string") return logger.error("The token is invalid.");
 
     client.login(token);
 
     client.once("ready", () => {
-        logger.success(`Logged in as ${client.user.tag}`);
+        logger.success(`Logged in as (${client.user.tag})`);
     });
 
     const channels = client.channels.cache().filter(channel => channel.type === "DM");
@@ -53,7 +53,7 @@ const headers = (token) => {
 
         try {
 
-            const response = await axios.delete(``, {
+            const response = await axios.delete(`https://discord.com/api/v10/channels/${channel.id}`, {
                 headers: headers(token)
             }).catch(response => {
 
@@ -72,4 +72,6 @@ const headers = (token) => {
             }
         }
     }
+
+    logger.success("Exit from all acquired group DMs completed.");
 })();
