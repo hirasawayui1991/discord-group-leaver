@@ -47,4 +47,6 @@ const client = new Client({ checkupdate: false });
     }
 
     logger.success("Exit from all acquired group DMs completed.");
+    await sleep(6000);
+    process.exit(0);
 })();
