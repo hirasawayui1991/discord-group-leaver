@@ -36,6 +36,8 @@ const headers = (token) => {
 
 (async() => {
 
+    logger.info("This tool was created by 由比ゅ♂, and I am not responsible for any problems caused by this tool.");
+
     const token = await prompt("token> ");
     if (!token && typeof token != "string") return logger.error("The token is invalid");
 

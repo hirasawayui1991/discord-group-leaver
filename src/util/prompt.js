@@ -1,4 +1,4 @@
-export function sleep(question) {
+export function prompt(question) {
     if (typeof question != "string") throw new Error("The question is invalid");
     return new Promise(resolve => {
         process.stdout.write(question);
