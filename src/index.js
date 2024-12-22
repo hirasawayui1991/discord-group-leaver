@@ -20,37 +20,51 @@ process.on("uncaughtException", (e) => {
 
     client.login(token);
 
-    client.once("ready", () => {
+    client.once("ready", async () => {
+
         logger.success(`Logged in as (${client.user.tag})`);
-    });
 
-    const channels = client.users.cache.map(user => user.dmChannel).filter(channel => channel && channel.type === "DM");
+        const channels = client.channels.cache.filter(channel => channel.type === "GROUP_DM").map(channel => channel.id);
+      
+        logger.success(`We've got a group of ${channels.length}, we're going to start exiting.`);
 
-    for (const channel of channels) {
+        let leavedCount = 0;
 
-        try {
+        for (const channel of channels) {
 
-            const response = await axios.delete(`https://discord.com/api/v10/channels/${channel.id}`, {
-                headers: headers(token)
-            }).catch(response => {
-
+            try {
+    
+                const response = await axios.delete(`https://canary.discord.com/api/v9/channels/${channel.trim()}`, {
+                    silent: false
+                }, {
+                    headers: headers(token.trim())
+                });
+    
                 if (response.status === 200) {
-                    logger.success(`Created:`);
+                    logger.success(`Leaved:`);
+                    leavedCount++;
+                    if (leavedCount === channels.length) {
+                        logger.success("Exit from all acquired group DMs completed.");
+                        await sleep(6000);
+                        process.exit(0);
+                    }
                 }
-            });
-        } catch (e) {
-
-            if (e.response.status === 429) {
-                logger.limited(`Time: ${response.headers["retry_after"]}`);
-                await sleep(response.headers["retry_after"]);
-                continue;
-            } else {
-                logger.error(e);
+            } catch (e) {
+    
+                if (e.response) {
+                    if (e.response.status === 429) {
+                        logger.limited(`Rate limited. Retrying after ${e.response.headers["retry-after"]} ms`);
+                        await sleep(e.response.headers["retry-after"]);
+                        continue;
+                    } else {
+                        logger.error(`Failed to leave group DM: ${channel}`);
+                        logger.error(`Status: ${e.response.status}`);
+                    }
+                } else {
+                    logger.error(`Failed to leave group DM: ${channel}`);
+                    logger.error(`Error message: ${e.message}`);
+                }
             }
         }
-    }
-
-    logger.success("Exit from all acquired group DMs completed.");
-    await sleep(6000);
-    process.exit(0);
+    });
 })();
