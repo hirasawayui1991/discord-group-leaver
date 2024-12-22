@@ -33,10 +33,10 @@ process.on("uncaughtException", (e) => {
         for (const channel of channels) {
 
             try {
-    
-                const response = await axios.delete(`https://canary.discord.com/api/v9/channels/${channel.trim()}`, {
-                    silent: false
-                }, {
+
+                const response = await axios({
+                    method: "DELETE",
+                    url: `https://canary.discord.com/api/v9/channels/${channel.trim()}?silent=false`,
                     headers: headers(token.trim())
                 });
     
