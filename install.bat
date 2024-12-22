@@ -1,1 +1,1 @@
-npm i axios
+npm install
