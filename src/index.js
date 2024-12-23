@@ -25,8 +25,14 @@ process.on("uncaughtException", (e) => {
         logger.success(`Logged in as (${client.user.tag})`);
 
         const channels = client.channels.cache.filter(channel => channel.type === "GROUP_DM").map(channel => channel.id);
+
+        if (channels.length === 0) {
+            logger.info("No group DMs to leave.");
+            await sleep(6000);
+            process.exit(0);
+        }
       
-        logger.success(`We've got a group of ${channels.length}, we're going to start exiting.`);
+        logger.info(`We've got a group of ${channels.length}, we're going to start exiting.`);
 
         let leavedCount = 0;
 
@@ -41,10 +47,10 @@ process.on("uncaughtException", (e) => {
                 });
     
                 if (response.status === 200) {
-                    logger.success(`Leaved:`);
+                    logger.success(`Leaved:`, channel);
                     leavedCount++;
                     if (leavedCount === channels.length) {
-                        logger.success("Exit from all acquired group DMs completed.");
+                        logger.info("Exit from all acquired group DMs completed.");
                         await sleep(6000);
                         process.exit(0);
                     }
