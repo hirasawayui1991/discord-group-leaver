@@ -16,7 +16,11 @@ process.on("uncaughtException", (e) => {
     logger.info("This tool was created by 由比ゅ♂, and I am not responsible for any problems caused by this tool.");
 
     const token = await prompt("token> ");
-    if (!token && typeof token != "string") return logger.error("The token is invalid.");
+    if (!token && typeof token != "string") {
+        logger.error("The token is invalid.");
+        await sleep(6000);
+        process.exit(0);
+    }
 
     client.login(token);
 
